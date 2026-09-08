@@ -1,5 +1,7 @@
 import React from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 export default function PostDetails({ post, close, setPosts, showDelete = true }) {
 
   const handleDelete = async () => {
@@ -8,7 +10,7 @@ export default function PostDetails({ post, close, setPosts, showDelete = true }
 
     try {
       const res = await fetch(
-        `/deletepost/${post._id}`,
+        API_URL + `/deletepost/${post._id}`,
         {
           method: "DELETE",
           headers: {

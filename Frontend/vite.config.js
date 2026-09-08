@@ -7,10 +7,6 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss(),
   ],
-  build: {
-    outDir: '../public',
-    emptyOutDir: true,
-  },
   server: {
     proxy: {
       '/api': 'http://localhost:5000',

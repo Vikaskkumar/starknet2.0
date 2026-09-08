@@ -24,11 +24,8 @@ app.use(userRoutes);
 app.use(chatRoutes);
 
 
-app.use(express.static(path.join(__dirname, "../public")));
-
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+// For production, the frontend will be served by Vercel on a separate domain.
+// We no longer need to serve static files from the backend.
 
 
 
