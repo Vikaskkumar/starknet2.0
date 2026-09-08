@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const USER = require('../models/User.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Jwt_secret } = require('../keys');
+const Jwt_secret = process.env.JWT_SECRET;
 const requireLogin = require('../middlewares/requireLogin.js');
 
 router.post('/signup', async (req, res) => {

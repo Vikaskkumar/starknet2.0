@@ -82,22 +82,22 @@ export default function UserProfile({ userid }) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="pt-10 max-w-5xl mx-auto px-4">
+    <div className="min-h-screen bg-black text-white pb-20 md:pb-6">
+      <div className="pt-20 md:pt-10 max-w-5xl mx-auto px-4 md:px-6">
 
         {/* PROFILE */}
-        <div className="flex items-center gap-6 border-b border-gray-800 pb-6">
+        <div className="flex items-center gap-4 md:gap-6 border-b border-gray-800 pb-6">
           <img
             src={user.Photo || profilepic}
             alt=""
-            className="h-28 w-28 rounded-full object-cover"
+            className="h-20 w-20 md:h-28 md:w-28 rounded-full object-cover"
           />
 
           <div className="flex-1">
-            <h1 className="text-2xl font-semibold">{user.name}</h1>
-            <p className="text-gray-400 text-sm">Full-stack Developer</p>
+            <h1 className="text-xl md:text-2xl font-semibold">{user.name}</h1>
+            <p className="text-gray-400 text-xs md:text-sm">Full-stack Developer</p>
 
-            <div className="flex gap-6 mt-3 text-sm">
+            <div className="flex gap-4 md:gap-6 mt-2 md:mt-3 text-xs md:text-sm">
               <p><span className="font-semibold">{posts.length}</span> posts</p>
               <p><span className="font-semibold">{user.followers?.length || 0}</span> followers</p>
               <p><span className="font-semibold">{user.following?.length || 0}</span> following</p>
@@ -108,14 +108,14 @@ export default function UserProfile({ userid }) {
             following ? (
               <button
                 onClick={unfollowUser}
-                className="px-4 py-1 border rounded text-sm text-gray-300"
+                className="px-3 py-1 md:px-4 border rounded text-xs md:text-sm text-gray-300"
               >
                 Following
               </button>
             ) : (
               <button
                 onClick={followUser}
-                className="px-4 py-1 bg-white text-black rounded text-sm"
+                className="px-3 py-1 md:px-4 bg-white text-black rounded text-xs md:text-sm font-semibold"
               >
                 Follow
               </button>
@@ -124,18 +124,19 @@ export default function UserProfile({ userid }) {
         </div>
 
         {/* POSTS */}
-        <div className="mt-8 grid grid-cols-3 gap-2">
+        <div className="mt-4 md:mt-8 grid grid-cols-3 gap-1 md:gap-2">
           {posts.map(post => (
             <img
               key={post._id}
               src={post.photo}
               onClick={() => setSelectedPost(post)}
               alt="post"
-              className="aspect-square object-cover cursor-pointer"
+              className="aspect-square object-cover cursor-pointer hover:opacity-80 transition"
             />
           ))}
         </div>
       </div>
+      
       {selectedPost && (
         <PostDetails
           post={selectedPost}

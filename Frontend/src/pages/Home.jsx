@@ -96,8 +96,8 @@ export default function Home() {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-black flex justify-center">
-      <div className="w-full max-w-xl px-3 space-y-6">
+    <div className="pt-16 md:pt-20 pb-20 md:pb-6 min-h-screen bg-black flex justify-center">
+      <div className="w-full max-w-xl px-0 md:px-3 space-y-4 md:space-y-6">
 
         {data.map(post => {
           const liked = post.likes?.includes(currentUser._id);
@@ -105,7 +105,7 @@ export default function Home() {
           return (
             <div
               key={post._id}
-              className="bg-[#0b0b0b] border border-white/10 rounded-2xl overflow-hidden"
+              className="bg-[#0b0b0b] border-y md:border border-white/10 rounded-none md:rounded-2xl overflow-hidden"
             >
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
                 <img
@@ -207,12 +207,12 @@ export default function Home() {
 
       {openUser && (
         <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center">
-          <div className="bg-black w-full max-w-3xl h-[90vh] rounded-2xl relative overflow-y-auto">
+          <div className="bg-black w-full h-[100dvh] md:max-w-3xl md:h-[90vh] md:rounded-2xl relative overflow-y-auto">
             <button
               onClick={() => setOpenUser(null)}
-              className="absolute top-3 right-3 text-white"
+              className="absolute top-4 right-4 z-50 p-2 bg-black/50 rounded-full text-white hover:bg-black/80"
             >
-              <X />
+              <X size={24} />
             </button>
 
             <UserProfile userid={openUser} />
