@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
+import defaultPic from "../assets/pics/defaultPic.svg";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 const API_URL_SOCKET = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -52,11 +53,11 @@ const Chat = () => {
     }, [selectedUser]);
 
     const sendMessage = () => {
-        if (currentMessage !== "" && selectedUser) {
+        if (currentMessage.trim() !== "" && selectedUser) {
             const messageData = {
                 senderId: currentUser._id,
                 receiverId: selectedUser._id,
-                text: currentMessage
+                text: currentMessage.trim()
             };
 
             socket.emit("send_message", messageData);
@@ -74,72 +75,94 @@ const Chat = () => {
 
     return (
         <div className="pt-14 md:pt-20 min-h-screen bg-black flex justify-center pb-20 md:pb-6">
-            <div className="w-full max-w-4xl bg-black md:bg-[#111] p-0 md:p-5 rounded-none md:rounded-lg md:border border-gray-700 h-[calc(100vh-120px)] md:h-[80vh] flex gap-0 md:gap-4">
+            <div className="w-full max-w-5xl bg-black md:bg-[#0b0b0b] rounded-none md:rounded-2xl md:border border-white/10 h-[calc(100vh-120px)] md:h-[80vh] flex overflow-hidden shadow-2xl">
 
                 {/* Left Side: Users List */}
-                <div className={`w-full md:w-1/3 border-r-0 md:border-r border-gray-700 pr-0 md:pr-4 flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
-                    <h2 className="text-cyan-400 font-bold text-xl mb-4 border-b border-gray-700 pb-2 px-4 md:px-0 mt-4 md:mt-0">Chats</h2>
-                    <div className="flex-1 overflow-y-auto px-2 md:px-0">
+                <div className={`w-full md:w-1/3 border-r-0 md:border-r border-white/10 flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
+                    <div className="p-4 border-b border-white/10">
+                        <h2 className="text-white font-bold text-xl tracking-wide">Messages</h2>
+                    </div>
+                    <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
                         {users.map(user => (
                             <div
                                 key={user._id}
                                 onClick={() => setSelectedUser(user)}
-                                className={`p-4 md:p-3 mb-2 rounded-lg cursor-pointer ${selectedUser?._id === user._id ? 'bg-cyan-900/50' : 'bg-[#111] md:bg-black hover:bg-gray-800'} text-white border border-gray-800 md:border-0`}
+                                className={`flex items-center gap-3 p-4 cursor-pointer transition ${selectedUser?._id === user._id ? 'bg-white/10' : 'hover:bg-white/5'} border-b border-white/5`}
                             >
-                                <p className="font-bold">{user.name}</p>
+                                <img src={user.Photo || defaultPic} className="w-12 h-12 rounded-full object-cover border border-cyan-500/30" alt={user.name} />
+                                <div className="flex-1 overflow-hidden">
+                                    <p className="font-semibold text-white truncate">{user.name}</p>
+                                    <p className="text-xs text-gray-500 truncate">Tap to chat</p>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Right Side: Chat Window */}
-                <div className={`w-full md:w-2/3 flex-col ${!selectedUser ? 'hidden md:flex' : 'flex'}`}>
+                <div className={`w-full md:w-2/3 flex-col bg-black md:bg-transparent ${!selectedUser ? 'hidden md:flex' : 'flex'}`}>
                     {selectedUser ? (
                         <>
-                            <div className="flex items-center gap-3 border-b border-gray-700 pb-2 mb-4 px-4 md:px-0 mt-4 md:mt-0">
+                            {/* Chat Header */}
+                            <div className="flex items-center gap-3 p-4 border-b border-white/10 bg-black/50 backdrop-blur-md">
                                 <button 
                                     onClick={() => setSelectedUser(null)}
-                                    className="md:hidden text-cyan-400 hover:text-white"
+                                    className="md:hidden text-cyan-400 hover:text-white transition"
                                 >
                                     <ArrowLeft size={24} />
                                 </button>
-                                <h2 className="text-cyan-400 font-bold text-xl">
+                                <img src={selectedUser.Photo || defaultPic} className="w-10 h-10 rounded-full object-cover" alt={selectedUser.name} />
+                                <h2 className="text-white font-semibold text-lg">
                                     {selectedUser.name}
                                 </h2>
                             </div>
 
                             {/* Messages List */}
-                            <div className="flex-1 overflow-y-auto mb-4 text-white px-4 md:px-2">
-                                {displayedMessages.map((msg, index) => (
-                                    <div key={index} className={`mb-3 flex flex-col ${msg.sender?._id === currentUser._id || msg.sender === currentUser._id ? 'items-end' : 'items-start'}`}>
-                                        <div className={`p-3 rounded-2xl max-w-[80%] ${msg.sender?._id === currentUser._id || msg.sender === currentUser._id ? 'bg-cyan-700 rounded-br-sm' : 'bg-gray-700 rounded-bl-sm'}`}>
-                                            <span className="text-sm md:text-base">{msg.content}</span>
-                                        </div>
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollbarWidth: 'none' }}>
+                                {displayedMessages.length === 0 && (
+                                    <div className="flex justify-center items-center h-full text-gray-500 text-sm">
+                                        Say hi to {selectedUser.name}!
                                     </div>
-                                ))}
+                                )}
+                                {displayedMessages.map((msg, index) => {
+                                    const isMe = msg.sender?._id === currentUser._id || msg.sender === currentUser._id;
+                                    return (
+                                        <div key={index} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                                            <div className={`px-4 py-2.5 max-w-[75%] shadow-md ${isMe ? 'bg-cyan-600 text-white rounded-2xl rounded-br-sm' : 'bg-zinc-800 text-gray-100 rounded-2xl rounded-bl-sm'}`}>
+                                                <span className="text-sm md:text-base leading-relaxed break-words">{msg.content}</span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             {/* Input Area */}
-                            <div className="flex gap-2 px-4 md:px-0 mb-4 md:mb-0">
-                                <input
-                                    type="text"
-                                    value={currentMessage}
-                                    onChange={(e) => setCurrentMessage(e.target.value)}
-                                    placeholder="Message..."
-                                    className="flex-1 p-3 rounded-full bg-[#111] md:bg-black text-white border border-gray-600 outline-none focus:border-cyan-500"
-                                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                />
-                                <button
-                                    onClick={sendMessage}
-                                    className="bg-cyan-500 text-black px-6 py-2 rounded-full font-bold hover:bg-cyan-400"
-                                >
-                                    Send
-                                </button>
+                            <div className="p-4 bg-black/50 border-t border-white/10">
+                                <div className="flex items-center gap-2 bg-zinc-900 rounded-full p-1 border border-white/10 focus-within:border-cyan-500/50 transition">
+                                    <input
+                                        type="text"
+                                        value={currentMessage}
+                                        onChange={(e) => setCurrentMessage(e.target.value)}
+                                        placeholder="Message..."
+                                        className="flex-1 bg-transparent text-white px-4 py-2 outline-none text-sm placeholder-gray-500"
+                                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                    />
+                                    <button
+                                        onClick={sendMessage}
+                                        disabled={!currentMessage.trim()}
+                                        className="bg-cyan-500 text-black p-2 rounded-full hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition shrink-0 mr-1"
+                                    >
+                                        <Send size={18} className="-ml-[1px] mt-[1px]" />
+                                    </button>
+                                </div>
                             </div>
                         </>
                     ) : (
-                        <div className="flex-1 flex items-center justify-center text-gray-500">
-                            Select a user to start chatting
+                        <div className="flex-1 flex flex-col items-center justify-center text-gray-500 gap-4">
+                            <div className="w-20 h-20 rounded-full border-2 border-dashed border-gray-700 flex items-center justify-center">
+                                <Send size={32} className="text-gray-700" />
+                            </div>
+                            <p className="text-sm font-medium">Select a user to start chatting</p>
                         </div>
                     )}
                 </div>
