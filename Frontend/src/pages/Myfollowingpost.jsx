@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Heart, MessageCircle, Send, Bookmark, Code2 } from "lucide-react";
-import userimg from "../assets/pics/images (13).jpeg";
+import userimg from "../assets/pics/defaultPic.svg";
 import { useNavigate, Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
-
 
 export default function Myfollowingpost() {
 
@@ -79,13 +78,13 @@ export default function Myfollowingpost() {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-black flex justify-center">
-      <div className="w-full max-w-xl px-3 space-y-6">
+    <div className="pt-16 md:pt-20 pb-20 md:pb-6 min-h-screen bg-black flex justify-center">
+      <div className="w-full max-w-xl px-0 md:px-3 space-y-4 md:space-y-6">
 
         {data.map(post => (
           <div
             key={post._id}
-            className="bg-[#0b0b0b] border border-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-cyan-500/10 transition"
+            className="bg-[#0b0b0b] border-y md:border border-white/10 rounded-none md:rounded-2xl overflow-hidden shadow-lg hover:shadow-cyan-500/10 transition"
           >
 
             {/* HEADER */}

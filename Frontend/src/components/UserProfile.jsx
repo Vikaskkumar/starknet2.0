@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PostDetails from "../components/PostDetails";
-import profilepic from "../assets/pics/images (13).jpeg";
+import profilepic from "../assets/pics/defaultPic.svg";
 import { useParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "";

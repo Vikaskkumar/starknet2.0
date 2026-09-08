@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import PostDetails from "../components/PostDetails";
 import ProfilePic from "../components/ProfilePic";
-import profilepic from "../assets/pics/images (13).jpeg";
+import profilepic from "../assets/pics/defaultPic.svg";
 import { LoginContext } from "../context/LoginContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "";

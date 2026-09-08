@@ -60,7 +60,7 @@ export default function Signin() {
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-      <div className="relative z-10 w-96 p-8 bg-black/80 rounded-2xl shadow-[0_0_40px_rgba(0,255,255,0.25)]">
+      <div className="relative z-10 w-[90%] max-w-[384px] p-6 md:p-8 bg-black/80 rounded-2xl shadow-[0_0_40px_rgba(0,255,255,0.25)]">
         <h1 className="text-2xl font-bold text-center text-cyan-300 mb-6">
           Welcome Back
         </h1>

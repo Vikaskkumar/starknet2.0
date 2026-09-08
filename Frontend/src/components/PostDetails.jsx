@@ -75,7 +75,7 @@ export default function PostDetails({ post, close, setPosts, showDelete = true }
           </p>
 
           {/* delete */}
-          {showDelete && (
+          {showDelete && String(JSON.parse(localStorage.getItem("user") || "{}")._id) === String(post.postedBy?._id || post.postedBy) && (
             <button
               onClick={handleDelete}
               className="mt-auto rounded-lg bg-red-600 py-2 text-white transition hover:bg-red-700"

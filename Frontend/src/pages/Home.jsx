@@ -3,13 +3,14 @@ import { Heart, MessageCircle, Send, Bookmark, X } from "lucide-react";
 import UserProfile from "../components/UserProfile";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../context/LoginContext";
-import userimg from "../assets/pics/images (13).jpeg";
+import userimg from "../assets/pics/defaultPic.svg";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [openUser, setOpenUser] = useState(null);
   const [openComments, setOpenComments] = useState({});
   const [commentText, setCommentText] = useState({});
@@ -39,6 +40,16 @@ export default function Home() {
         setuserLogin(false);
         navigate("/Signin", { replace: true });
       });
+
+    // Fetch user suggestions
+    fetch(API_URL + "/allusers", {
+      headers: { Authorization: "Bearer " + token },
+    })
+      .then(res => res.json())
+      .then(usersData => {
+        if (Array.isArray(usersData)) setSuggestions(usersData);
+      })
+      .catch(console.log);
   }, [navigate, setuserLogin]);
 
   const likepost = (id) => {
@@ -56,6 +67,23 @@ export default function Home() {
           prev.map(p => (p._id === result._id ? result : p))
         );
       });
+  };
+
+  const followSuggestedUser = (followId) => {
+    fetch(API_URL + "/follow", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({ followId }),
+    })
+      .then(res => res.json())
+      .then(() => {
+        // Remove from suggestions once followed
+        setSuggestions(prev => prev.filter(u => u._id !== followId));
+      })
+      .catch(console.log);
   };
 
   const unlikepost = (id) => {
@@ -96,8 +124,10 @@ export default function Home() {
   };
 
   return (
-    <div className="pt-16 md:pt-20 pb-20 md:pb-6 min-h-screen bg-black flex justify-center">
-      <div className="w-full max-w-xl px-0 md:px-3 space-y-4 md:space-y-6">
+    <div className="pt-16 md:pt-20 pb-20 md:pb-6 min-h-screen bg-black flex justify-center gap-8 px-0 md:px-4">
+      
+      {/* LEFT COLUMN: POSTS */}
+      <div className="w-full max-w-xl space-y-4 md:space-y-6">
 
         {data.map(post => {
           const liked = post.likes?.includes(currentUser._id);
@@ -205,6 +235,45 @@ export default function Home() {
         })}
       </div>
 
+      {/* RIGHT COLUMN: SUGGESTIONS */}
+      <div className="hidden lg:block w-[320px]">
+        <div className="sticky top-24">
+          <div className="flex items-center gap-4 mb-6">
+            <img src={currentUser.Photo || userimg} className="w-12 h-12 rounded-full object-cover" />
+            <div>
+              <p className="text-white text-sm font-semibold">{currentUser.userName || currentUser.name}</p>
+              <p className="text-gray-400 text-xs">{currentUser.name}</p>
+            </div>
+          </div>
+
+          <h3 className="text-gray-400 font-semibold mb-4 text-sm">Suggested for you</h3>
+          
+          <div className="space-y-4">
+            {suggestions.map(user => (
+              <div key={user._id} className="flex items-center justify-between">
+                <div 
+                  className="flex items-center gap-3 cursor-pointer" 
+                  onClick={() => setOpenUser(user._id)}
+                >
+                  <img src={user.Photo || userimg} className="w-10 h-10 rounded-full object-cover" />
+                  <div className="flex flex-col">
+                    <span className="text-white text-sm font-semibold hover:text-cyan-400">{user.name}</span>
+                    <span className="text-gray-400 text-xs">Suggested for you</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => followSuggestedUser(user._id)} 
+                  className="text-cyan-400 text-xs font-semibold hover:text-white transition"
+                >
+                  Follow
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Profile Modal */}
       {openUser && (
         <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center">
           <div className="bg-black w-full h-[100dvh] md:max-w-3xl md:h-[90vh] md:rounded-2xl relative overflow-y-auto">
@@ -219,6 +288,7 @@ export default function Home() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
