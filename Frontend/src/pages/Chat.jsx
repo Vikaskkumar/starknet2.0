@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { ArrowLeft, Send } from "lucide-react";
 import defaultPic from "../assets/pics/defaultPic.svg";
@@ -12,6 +12,16 @@ const Chat = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState("");
+    const [isBotTyping, setIsBotTyping] = useState(false);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, isBotTyping]);
 
     const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
     const token = localStorage.getItem("jwt");
@@ -26,12 +36,27 @@ const Chat = () => {
         })
             .then(res => res.json())
             .then(data => {
-                if (Array.isArray(data)) setUsers(data);
+                if (Array.isArray(data)) {
+                    // Inject Universal AI Bot at the top
+                    const aiBot = {
+                        _id: "universal_ai_bot",
+                        name: "StarkBot AI",
+                        email: "bot@starknet.ai",
+                        Photo: "https://api.dicebear.com/7.x/bottts/svg?seed=StarkBot&backgroundColor=06b6d4"
+                    };
+                    // Filter out any accidentally created bot users from DB, then inject the universal one
+                    const filteredData = data.filter(u => u.email !== "bot@starknet.ai");
+                    setUsers([aiBot, ...filteredData]);
+                }
             })
             .catch(err => console.log(err));
 
         socket.on("receive_message", (data) => {
             setMessages((prev) => [...prev, data]);
+            // If we receive a message from the bot, stop the typing indicator
+            if (data.sender?._id && data.sender._id !== currentUser._id) {
+                setIsBotTyping(false);
+            }
         });
 
         return () => {
@@ -62,6 +87,10 @@ const Chat = () => {
 
             socket.emit("send_message", messageData);
             setCurrentMessage("");
+            
+            if (selectedUser?.email === 'bot@starknet.ai') {
+                setIsBotTyping(true);
+            }
         }
     };
 
@@ -91,7 +120,12 @@ const Chat = () => {
                             >
                                 <img src={user.Photo || defaultPic} className="w-12 h-12 rounded-full object-cover border border-cyan-500/30" alt={user.name} />
                                 <div className="flex-1 overflow-hidden">
-                                    <p className="font-semibold text-white truncate">{user.name}</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-semibold text-white truncate">{user.name}</p>
+                                        {user.email === 'bot@starknet.ai' && (
+                                            <span className="bg-cyan-500/20 text-cyan-400 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">AI</span>
+                                        )}
+                                    </div>
                                     <p className="text-xs text-gray-500 truncate">Tap to chat</p>
                                 </div>
                             </div>
@@ -112,9 +146,14 @@ const Chat = () => {
                                     <ArrowLeft size={24} />
                                 </button>
                                 <img src={selectedUser.Photo || defaultPic} className="w-10 h-10 rounded-full object-cover" alt={selectedUser.name} />
-                                <h2 className="text-white font-semibold text-lg">
-                                    {selectedUser.name}
-                                </h2>
+                                <div className="flex items-center gap-2">
+                                    <h2 className="text-white font-semibold text-lg">
+                                        {selectedUser.name}
+                                    </h2>
+                                    {selectedUser.email === 'bot@starknet.ai' && (
+                                        <span className="bg-cyan-500/20 text-cyan-400 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">AI</span>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Messages List */}
@@ -134,6 +173,17 @@ const Chat = () => {
                                         </div>
                                     );
                                 })}
+                                
+                                {isBotTyping && selectedUser?.email === 'bot@starknet.ai' && (
+                                    <div className="flex flex-col items-start">
+                                        <div className="px-4 py-3 bg-zinc-800 text-gray-400 rounded-2xl rounded-bl-sm flex items-center gap-1.5 shadow-md">
+                                            <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                            <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                            <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                        </div>
+                                    </div>
+                                )}
+                                <div ref={messagesEndRef} />
                             </div>
 
                             {/* Input Area */}

@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-
 require("dotenv").config();
+
 const db = require("./config/db");
 
 const { initSocket } = require("./socket");
@@ -20,7 +20,7 @@ app.use(require("./Routes/user"));
 app.use(require("./Routes/Chat"));
 
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
   console.log("Server running on port " + PORT);
 });
 
