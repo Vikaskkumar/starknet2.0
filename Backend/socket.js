@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const Message = require("./models/Message");
-const USER = require("./models/user");
+const USER = require("./models/User");
 const { handleBotChat } = require("./services/botService");
 
 const initSocket = (server) => {

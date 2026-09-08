@@ -1,5 +1,5 @@
 const OpenAI = require("openai");
-const USER = require("../models/user");
+const USER = require("../models/User");
 const POST = require("../models/post");
 
 const client = new OpenAI({
