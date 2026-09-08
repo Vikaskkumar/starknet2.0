@@ -1,30 +1,12 @@
 const mongoose = require("mongoose");
-const { mongoUrl } = require("../keys.js");
 
-let connectionPromise;
-
-function Dbconnection() {
-  if (!mongoUrl) {
-    return Promise.reject(new Error("MONGODB_URI is not configured"));
-  }
-
+async function connectDB() {
   if (mongoose.connection.readyState === 1) {
-    return Promise.resolve(mongoose.connection);
+    return;
   }
 
-  if (!connectionPromise) {
-    connectionPromise = mongoose.connect(mongoUrl)
-      .then((connection) => {
-        console.log("Database connected successfully");
-        return connection;
-      })
-      .catch((error) => {
-        connectionPromise = undefined;
-        throw error;
-      });
-  }
-
-  return connectionPromise;
+  await mongoose.connect(process.env.MONGODB_URI);
+  console.log("MongoDB connected");
 }
 
-module.exports = Dbconnection;
+module.exports = connectDB;
