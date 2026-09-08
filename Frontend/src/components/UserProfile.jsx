@@ -3,6 +3,9 @@ import PostDetails from "../components/PostDetails";
 import profilepic from "../assets/pics/images (13).jpeg";
 import { useParams } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 export default function UserProfile({ userid }) {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
@@ -17,7 +20,7 @@ export default function UserProfile({ userid }) {
   useEffect(() => {
     if (!profileId) return;
 
-    fetch(`/user/${profileId}`, {
+    fetch(API_URL + `/user/${profileId}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
@@ -39,7 +42,7 @@ export default function UserProfile({ userid }) {
   if (!user) return null;
 
   const followUser = () => {
-    fetch("/follow", {
+    fetch(API_URL + "/follow", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +61,7 @@ export default function UserProfile({ userid }) {
   };
 
   const unfollowUser = () => {
-    fetch("/unfollow", {
+    fetch(API_URL + "/unfollow", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

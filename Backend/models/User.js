@@ -37,9 +37,15 @@ const userSchema = new mongoose.Schema({
     following:[{
         type:ObjectId,
         ref:"USER"
-    }]
+    }],
 
+    resetToken: {
+        type: String
+    },
+    expireToken: {
+        type: Date
+    }
 
 }, { timestamps: true })
 
-module.exports = mongoose.model("USER",userSchema);
+module.exports = mongoose.models.USER || mongoose.model("USER", userSchema);

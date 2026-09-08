@@ -3,6 +3,10 @@ import { Heart, MessageCircle, Send, Bookmark, X } from "lucide-react";
 import UserProfile from "../components/UserProfile";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../context/LoginContext";
+import userimg from "../assets/pics/images (13).jpeg";
+
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -21,7 +25,7 @@ export default function Home() {
       return;
     }
 
-    fetch("/allposts", {
+    fetch(API_URL + "/allposts", {
       headers: { Authorization: "Bearer " + token },
     })
       .then(async (res) => {
@@ -38,7 +42,7 @@ export default function Home() {
   }, [navigate, setuserLogin]);
 
   const likepost = (id) => {
-    fetch("/like", {
+    fetch(API_URL + "/like", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +59,7 @@ export default function Home() {
   };
 
   const unlikepost = (id) => {
-    fetch("/unlike", {
+    fetch(API_URL + "/unlike", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +78,7 @@ export default function Home() {
   const makeComment = (text, id) => {
     if (!text?.trim()) return;
 
-    fetch("/comment", {
+    fetch(API_URL + "/comment", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -105,9 +109,9 @@ export default function Home() {
             >
               <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
                 <img
-                  src={post.postedBy?.Photo}
+                  src={post.postedBy?.Photo || userimg}
                   alt=""
-                  className="h-9 w-9 rounded-full cursor-pointer"
+                  className="h-9 w-9 rounded-full cursor-pointer object-cover"
                   onClick={() => post.postedBy?._id && setOpenUser(post.postedBy._id)}
                 />
 

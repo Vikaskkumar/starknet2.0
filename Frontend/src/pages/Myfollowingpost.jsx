@@ -3,6 +3,9 @@ import { Heart, MessageCircle, Send, Bookmark, Code2 } from "lucide-react";
 import userimg from "../assets/pics/images (13).jpeg";
 import { useNavigate, Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 export default function Myfollowingpost() {
 
   const [data, setData] = useState([]);
@@ -19,7 +22,7 @@ export default function Myfollowingpost() {
       return;
     }
 
-    fetch("/myfollowingpost", {
+    fetch(API_URL + "/myfollowingpost", {
       headers: { Authorization: "Bearer " + token },
     })
       .then(res => res.json())
@@ -28,7 +31,7 @@ export default function Myfollowingpost() {
   }, [navigate]);
 
   const likepost = (id) => {
-    fetch("/like", {
+    fetch(API_URL + "/like", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +46,7 @@ export default function Myfollowingpost() {
   };
 
   const unlikepost = (id) => {
-    fetch("/unlike", {
+    fetch(API_URL + "/unlike", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +63,7 @@ export default function Myfollowingpost() {
   const makeComment = (text, id) => {
     if (!text?.trim()) return;
 
-    fetch("/comment", {
+    fetch(API_URL + "/comment", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

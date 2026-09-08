@@ -31,6 +31,9 @@ export default defineConfig({
       '/uploadProfilePic': 'http://localhost:5000',
       '/removeProfilePic': 'http://localhost:5000',
       '/health': 'http://localhost:5000',
+      '/allusers': 'http://localhost:5000',
+      '/messages': 'http://localhost:5000',
+      '/direct-reset-password': 'http://localhost:5000',
     }
   }
 })

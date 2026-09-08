@@ -69,7 +69,7 @@ export default function PostDetails({ post, close, setPosts, showDelete = true }
 
           {/* likes */}
           <p className="mt-2 text-sm text-gray-400">
-            {post.likes.length} likes
+            {post.likes?.length || 0} likes
           </p>
 
           {/* delete */}

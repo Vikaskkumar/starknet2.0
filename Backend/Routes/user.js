@@ -4,6 +4,8 @@ const POST = require("../models/post");
 const USER = require("../models/User");
 const requireLogin = require("../middlewares/requireLogin")
 
+
+
 //for user-profile
 router.get("/user/:id", async (req, res) => {
   try {
@@ -85,7 +87,7 @@ router.put("/unfollow", requireLogin, async (req, res) => {
     );
 
     res.json({
-      message: "User followed successfully",
+      message: "User unfollowed successfully",
       user: result
     });
 
@@ -121,7 +123,7 @@ router.put("/uploadProfilePic", requireLogin, async (req, res) => {
     const result = await USER.findByIdAndUpdate(
       req.user._id,
       {
-        $set: { Photo: req.body.pic } 
+        $set: { Photo: req.body.pic }
       },
       { new: true }
     );
@@ -150,5 +152,15 @@ router.put("/removeProfilePic", requireLogin, async (req, res) => {
 
 
 
+// Get all users for chat
+router.get("/allusers", requireLogin, async (req, res) => {
+  try {
+    // Find all users except the currently logged in user
+    const users = await USER.find({ _id: { $ne: req.user._id } }).select("_id name Photo userName");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

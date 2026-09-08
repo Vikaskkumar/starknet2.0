@@ -1,5 +1,8 @@
 import React, { useRef, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/debcictpi/image/upload";
 
 export default function ProfilePic({ close, onSaved }) {
@@ -25,7 +28,7 @@ export default function ProfilePic({ close, onSaved }) {
         throw new Error(uploadResult.error?.message || "Image upload failed");
       }
 
-      const response = await fetch("/uploadProfilePic", {
+      const response = await fetch(API_URL + "/uploadProfilePic", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +53,7 @@ export default function ProfilePic({ close, onSaved }) {
   const removePic = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch("/removeProfilePic", {
+      const response = await fetch(API_URL + "/removeProfilePic", {
         method: "PUT",
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       });

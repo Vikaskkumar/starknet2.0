@@ -3,6 +3,9 @@ import signuplogo from "../assets/signup.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -29,7 +32,7 @@ export default function Signup() {
     }
 
    
-    fetch("/signup", {
+    fetch(API_URL + "/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

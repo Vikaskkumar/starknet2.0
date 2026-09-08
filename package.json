@@ -9,7 +9,7 @@
     "dev:frontend": "npm --prefix Frontend run dev",
     "start": "npm --prefix Backend start",
     "build": "npm --prefix Frontend ci && npm --prefix Frontend run build",
-    "install:all": "npm --prefix Backend install && npm --prefix Frontend install"
+    "install:all": "npm install && npm --prefix Backend install && npm --prefix Frontend install"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

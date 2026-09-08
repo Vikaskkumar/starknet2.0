@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LoginContext } from "../context/LoginContext";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 export default function Signin() {
   const { setuserLogin } = useContext(LoginContext);
 
@@ -28,7 +31,7 @@ export default function Signin() {
       return;
     }
 
-    fetch("/signin", {
+    fetch(API_URL + "/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,9 +86,9 @@ export default function Signin() {
             className="w-full px-4 py-2 rounded-lg bg-black/60 text-white outline-none border border-cyan-500/20 focus:border-cyan-400 transition"
           />
 
-          <div className="text-right text-xs text-gray-400 cursor-pointer hover:text-cyan-400 transition">
+          <Link to="/reset" className="block text-right text-xs text-gray-400 cursor-pointer hover:text-cyan-400 transition">
             Forgot password?
-          </div>
+          </Link>
 
           <button
             type="button"

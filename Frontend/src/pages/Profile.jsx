@@ -4,6 +4,9 @@ import ProfilePic from "../components/ProfilePic";
 import profilepic from "../assets/pics/images (13).jpeg";
 import { LoginContext } from "../context/LoginContext";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 export default function Profile() {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
@@ -18,8 +21,8 @@ export default function Profile() {
       try {
         const headers = { Authorization: "Bearer " + localStorage.getItem("jwt") };
         const [postsResponse, profileResponse] = await Promise.all([
-          fetch("/myposts", { headers }),
-          fetch("/myprofile", { headers }),
+          fetch(API_URL + "/myposts", { headers }),
+          fetch(API_URL + "/myprofile", { headers }),
         ]);
         const [postsData, profileData] = await Promise.all([
           postsResponse.json(),

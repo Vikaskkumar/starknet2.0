@@ -3,6 +3,9 @@ import profilepic from "../assets/pics/images (13).jpeg";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/debcictpi/image/upload";
 
 export default function CreatePost() {
@@ -46,7 +49,7 @@ export default function CreatePost() {
         throw new Error(uploadResult.error?.message || "Image upload failed");
       }
 
-      const response = await fetch("/createPost", {
+      const response = await fetch(API_URL + "/createPost", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

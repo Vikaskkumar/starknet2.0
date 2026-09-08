@@ -7,9 +7,6 @@ const jwt = require('jsonwebtoken');
 const { Jwt_secret } = require('../keys');
 const requireLogin = require('../middlewares/requireLogin.js');
 
-
-
-
 router.post('/signup', async (req, res) => {
     try {
         const { name, userName, email, password } = req.body;
@@ -90,8 +87,30 @@ router.post("/signin", async (req, res) => {
 
 });
 
+router.post("/direct-reset-password", async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(422).json({ error: "Please provide both email and new password" });
+        }
 
+        const user = await USER.findOne({ email: email.trim().toLowerCase() });
 
+        if (!user) {
+            return res.status(422).json({ error: "No user found with this email" });
+        }
+
+        const hashedpassword = await bcrypt.hash(password, 12);
+        user.password = hashedpassword;
+
+        await user.save();
+        res.json({ message: "Password updated successfully!" });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Server Error" });
+    }
+});
 
 module.exports = router;

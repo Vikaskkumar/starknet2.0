@@ -77,6 +77,12 @@ function Navbar({ login }) {
                 Create Post
               </Link>
 
+              <Link to="/Chat" onClick={() => setOpen(false)} className="hover:text-cyan-400">
+                Chat
+              </Link>
+
+
+
               <Link to="/followingpost" onClick={() => setOpen(false)} className="hover:text-cyan-400">
                 Myfollowing Posts
               </Link>
