@@ -51,7 +51,7 @@ const tools = Object.keys(toolsMap).map(name => ({
 const generateChatResponse = async (messages) => {
   try {
     const completion = await client.chat.completions.create({
-      model: "openai/gpt-oss-20b",
+      model: "llama-3.1-8b-instant",
       messages: messages,
       tools: tools,
       tool_choice: "auto"
@@ -76,7 +76,7 @@ const generateChatResponse = async (messages) => {
       }
 
       const secondCompletion = await client.chat.completions.create({
-        model: "openai/gpt-oss-20b",
+        model: "llama-3.1-8b-instant",
         messages: messages
       });
 
