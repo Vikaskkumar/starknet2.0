@@ -5,6 +5,7 @@ import { LoginContext } from "../context/LoginContext";
 import { Menu, X, Home, PlusSquare, MessageCircle, User, LogOut } from "lucide-react";
 
 function Navbar({ login }) {
+  
   const { setmodalOpen } = useContext(LoginContext);
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -16,11 +17,11 @@ function Navbar({ login }) {
 
   return (
     <>
-      {/* TOP NAVBAR */}
+      
       <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/80 border-b border-cyan-500/10">
         <div className="max-w-7xl mx-auto h-14 md:h-16 flex items-center justify-between px-4 md:px-8">
           
-          {/* LOGO */}
+          
           <Link to="/" className="flex items-center gap-2 group">
             <img
               src={logo}
@@ -32,7 +33,7 @@ function Navbar({ login }) {
             </p>
           </Link>
 
-          {/* MENU ICON */}
+          
           <button
             onClick={() => setOpen(true)}
             className="text-cyan-400 hover:text-white transition"
@@ -42,7 +43,7 @@ function Navbar({ login }) {
         </div>
       </nav>
 
-      {/* MOBILE BOTTOM TAB BAR */}
+      
       {isLoggedIn && (
         <div className="md:hidden fixed bottom-0 left-0 w-full h-14 bg-black/90 backdrop-blur-lg border-t border-cyan-500/10 z-50 flex justify-around items-center px-2">
           <Link to="/" className={`flex flex-col items-center justify-center w-full h-full ${isActive('/') ? 'text-cyan-400' : 'text-gray-500'}`}>
@@ -67,7 +68,7 @@ function Navbar({ login }) {
         </div>
       )}
 
-      {/* OVERLAY */}
+      
       {open && (
         <div
           onClick={() => setOpen(false)}
@@ -75,7 +76,7 @@ function Navbar({ login }) {
         ></div>
       )}
 
-      {/* SIDEBAR */}
+      
       <div
         className={`fixed top-0 right-0 h-full w-64 md:w-72 bg-[#0b0b0b] z-[60] transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full"}`}
